@@ -17,7 +17,8 @@
  * along with GenieACS.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as config from "../lib/config";
+// import * as config from "../lib/config";
+import { get } from "../lib/config";
 import * as logger from "../lib/logger";
 import * as cluster from "../lib/cluster";
 import * as server from "../lib/server";
@@ -28,8 +29,8 @@ import { version as VERSION } from "../package.json";
 
 logger.init("ui", VERSION);
 
-const SERVICE_ADDRESS = config.get("UI_INTERFACE") as string;
-const SERVICE_PORT = config.get("UI_PORT") as number;
+const SERVICE_ADDRESS = get("UI_INTERFACE") as string;
+const SERVICE_PORT = get("UI_PORT") as number;
 
 function exitWorkerGracefully(): void {
   setTimeout(exitWorkerUngracefully, 5000).unref();
@@ -47,7 +48,7 @@ function exitWorkerUngracefully(): void {
 }
 
 if (!cluster.worker) {
-  const WORKER_COUNT = config.get("UI_WORKER_PROCESSES") as number;
+  const WORKER_COUNT = get("UI_WORKER_PROCESSES") as number;
 
   logger.info({
     message: `genieacs-ui starting`,
@@ -75,8 +76,8 @@ if (!cluster.worker) {
     cluster.stop();
   });
 } else {
-  const key = config.get("UI_SSL_KEY") as string;
-  const cert = config.get("UI_SSL_CERT") as string;
+  const key = get("UI_SSL_KEY") as string;
+  const cert = get("UI_SSL_CERT") as string;
   const options = {
     port: SERVICE_PORT,
     host: SERVICE_ADDRESS,
